@@ -53,7 +53,7 @@ A clean, minimal FastAPI starter template with:
 
 <div align="center">
 
-![API Documentation](docs/swagger-screenshot.png)
+<img src="docs/swagger-screenshot.png" alt="API Documentation" width="600" style="max-width: 100%; height: auto;">
 
 *Interactive Swagger UI showing all available endpoints*
 
