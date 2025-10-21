@@ -37,7 +37,7 @@ jobs:
       - name: Run migrations
         run: alembic upgrade head
       - name: Lint
-        run: ruff .
+        run: ruff check .
       - name: Type-check
         run: mypy app
       - name: Tests

@@ -27,7 +27,8 @@ async def list_users_endpoint(
 ) -> list[User]:
     """Get all users"""
     service = UserService(db)
-    return await service.find_all()
+    users: list[User] = await service.find_all()
+    return users
 
 
 @router.get("/{user_id}", response_model=User)
@@ -78,7 +79,8 @@ async def search_users_endpoint(
     """Search users by name or email"""
     # For now, return all users since search functionality is not implemented in the simple service
     service = UserService(db)
-    return await service.find_all()
+    users: list[User] = await service.find_all()
+    return users
 
 
 @router.put("/{user_id}", response_model=User)
@@ -96,7 +98,7 @@ async def update_user_endpoint(
 async def delete_user_endpoint(
     user_id: int,
     db: Annotated[AsyncSession, Depends(get_db)],
-) -> dict:
+) -> dict[str, str]:
     """Delete user"""
     service = UserService(db)
     await service.remove(user_id)

@@ -23,7 +23,7 @@ fmt:
 	ruff format .
 
 lint:
-	ruff .
+	ruff check .
 
 type:
 	mypy app
