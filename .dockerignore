@@ -1,0 +1,9 @@
+.venv
+__pycache__
+*.pyc
+.env
+.git
+.gitignore
+alembic.ini
+*.sqlite3
+*.log

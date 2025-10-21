@@ -1,0 +1,39 @@
+[project]
+name = "fastapi-sqlalchemy-alembic-async"
+version = "0.1.0"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.30",
+    "SQLAlchemy>=2.0",
+    "asyncpg>=0.29",
+    "psycopg[binary]>=3.2",
+    "alembic>=1.13",
+    "pydantic-settings>=2.5",
+    "python-dotenv>=1.0",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+lint.select = ["E", "F", "I", "UP", "B", "ASYNC", "RUF", "ANN"]
+lint.ignore = ["ANN001", "ANN201", "ANN202", "E402", "E501"]
+exclude = [".venv", ".git", "alembic/versions"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["app"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+ignore_missing_imports = true
+warn_unused_ignores = true
+plugins = []
+
+[tool.pytest.ini_options]
+addopts = "-q"
+pythonpath = ["app"]
