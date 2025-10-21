@@ -1,5 +1,15 @@
 # FastAPI + SQLAlchemy 2.0 (async) + Alembic + PostgreSQL
 
+<div align="center">
+
+![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi)
+![SQLAlchemy](https://img.shields.io/badge/SQLAlchemy-1C1C1C?style=for-the-badge&logo=sqlalchemy)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
+
+</div>
+
 A clean, minimal FastAPI starter template with:
 
 - **FastAPI** - Modern Python web framework
@@ -7,6 +17,47 @@ A clean, minimal FastAPI starter template with:
 - **Alembic** - Database migrations
 - **Pydantic** - Data validation and serialization
 - **JWT Authentication** - Built-in auth system
+
+## Features
+
+<div align="center">
+
+![CI/CD](https://img.shields.io/badge/CI/CD-GitHub%20Actions-blue?style=for-the-badge)
+![Tests](https://img.shields.io/badge/Tests-Passing-brightgreen?style=for-the-badge)
+![Type Check](https://img.shields.io/badge/Type%20Check-MyPy-blue?style=for-the-badge)
+![Linting](https://img.shields.io/badge/Linting-Ruff-orange?style=for-the-badge)
+![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
+
+</div>
+
+- ✅ **Production Ready** - Complete CI/CD pipeline with GitHub Actions
+- ✅ **Type Safe** - Full mypy type checking and Pydantic validation
+- ✅ **Async First** - Modern async/await patterns throughout
+- ✅ **Docker Support** - Ready-to-use Docker configuration
+- ✅ **Database Migrations** - Alembic integration for schema management
+- ✅ **JWT Authentication** - Secure token-based auth system
+- ✅ **OpenAPI Documentation** - Auto-generated Swagger UI
+- ✅ **Testing Setup** - Comprehensive test configuration
+
+## API Documentation
+
+<div align="center">
+
+![Swagger UI](https://img.shields.io/badge/API%20Docs-Swagger%20UI-green?style=for-the-badge)
+
+*Interactive API documentation available at `/docs`*
+
+</div>
+
+### Screenshot
+
+<div align="center">
+
+![API Documentation](docs/swagger-screenshot.png)
+
+*Interactive Swagger UI showing all available endpoints*
+
+</div>
 
 ## Quick start
 
@@ -122,3 +173,26 @@ The API includes JWT-based authentication:
 3. **Protected routes**: Include `Authorization: Bearer <token>` header
 
 All user management endpoints require authentication.
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Support
+
+If you found this starter template helpful, please give it a ⭐ star!
+
+---
+
+<div align="center">
+
+**Made with ❤️ for the FastAPI community**
+
+[![GitHub stars](https://img.shields.io/github/stars/justyn-clark/fastapi-sqlalchemy-starter?style=social)](https://github.com/justyn-clark/fastapi-sqlalchemy-starter)
+[![GitHub forks](https://img.shields.io/github/forks/justyn-clark/fastapi-sqlalchemy-starter?style=social)](https://github.com/justyn-clark/fastapi-sqlalchemy-starter)
+
+</div>
