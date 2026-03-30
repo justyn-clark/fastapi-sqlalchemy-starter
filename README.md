@@ -1,198 +1,243 @@
 # FastAPI + SQLAlchemy 2.0 (async) + Alembic + PostgreSQL
 
-<div align="center">
+Minimal starter API built with FastAPI, async SQLAlchemy, Alembic migrations, and PostgreSQL.
 
-![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi)
-![SQLAlchemy](https://img.shields.io/badge/SQLAlchemy-1C1C1C?style=for-the-badge&logo=sqlalchemy)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
-![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
-![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
+## What is in this starter
 
-</div>
+- FastAPI app with `/docs` and `/openapi.json`
+- Async SQLAlchemy setup for runtime database access
+- Alembic migrations using a sync PostgreSQL driver
+- User model plus auth and user-management routes
+- JWT token issuance for login
+- Ruff, mypy, pytest, pre-commit, and GitHub Actions CI
+- Docker Compose setup for API + PostgreSQL + Adminer (+ Redis container scaffolded but unused by the app)
+- `Makefile` and `justfile` task runners
 
-A clean, minimal FastAPI starter template with:
+## Current status
 
-- **FastAPI** - Modern Python web framework
-- **SQLAlchemy 2.0** - Async ORM with PostgreSQL
-- **Alembic** - Database migrations
-- **Pydantic** - Data validation and serialization
-- **JWT Authentication** - Built-in auth system
+This repo is a starter template, not a finished product. A few things are intentionally minimal right now:
 
-## Features
+- Auth endpoints exist and JWTs are issued, but the `/users` routes are **not currently protected** by an auth dependency.
+- `GET /users/search` currently returns all users; real query filtering is not implemented yet.
+- The Docker Compose stack includes Redis, but the application code does not use Redis yet.
 
-<div align="center">
+## Stack
 
-![CI/CD](https://img.shields.io/badge/CI/CD-GitHub%20Actions-blue?style=for-the-badge)
-![Tests](https://img.shields.io/badge/Tests-Passing-brightgreen?style=for-the-badge)
-![Type Check](https://img.shields.io/badge/Type%20Check-MyPy-blue?style=for-the-badge)
-![Linting](https://img.shields.io/badge/Linting-Ruff-orange?style=for-the-badge)
-![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
+- Python 3.11+
+- FastAPI
+- SQLAlchemy 2.x (async)
+- Alembic
+- PostgreSQL 16
+- Pydantic Settings
+- Ruff
+- mypy
+- pytest
 
-</div>
+## Project layout
 
-- ✅ **Production Ready** - Complete CI/CD pipeline with GitHub Actions
-- ✅ **Type Safe** - Full mypy type checking and Pydantic validation
-- ✅ **Async First** - Modern async/await patterns throughout
-- ✅ **Docker Support** - Ready-to-use Docker configuration
-- ✅ **Database Migrations** - Alembic integration for schema management
-- ✅ **JWT Authentication** - Secure token-based auth system
-- ✅ **OpenAPI Documentation** - Auto-generated Swagger UI
-- ✅ **Testing Setup** - Comprehensive test configuration
-
-## API Documentation
-
-<div align="center">
-
-![Swagger UI](https://img.shields.io/badge/API%20Docs-Swagger%20UI-green?style=for-the-badge)
-
-*Interactive API documentation available at `/docs`*
-
-</div>
-
-### Screenshot
-
-<div align="center">
-
-<img src="docs/swagger-screenshot.png" alt="API Documentation" width="600" style="max-width: 100%; height: auto;">
-
-*Interactive Swagger UI showing all available endpoints*
-
-</div>
+```text
+app/
+  api/        # FastAPI route modules
+  core/       # config, auth, db setup
+  crud/       # data access helpers
+  models/     # SQLAlchemy models
+  schemas/    # request/response models
+  services/   # business logic
+alembic/      # migrations
+scripts/      # helper scripts such as OpenAPI export
+docs/         # generated OpenAPI artifact and README assets
+tests/        # test suite
+```
 
 ## Quick start
 
+### Option A: local Python + local PostgreSQL
+
 ```bash
-# 1) Create virtualenv & install deps
-python -m venv .venv && source .venv/bin/activate  # Linux/Mac
-# or python -m venv .venv && .venv\Scripts\activate  # Windows
+# 1) Create a virtual environment
+python3 -m venv .venv
+source .venv/bin/activate
+
+# 2) Install dependencies
 pip install -r requirements.txt
+pre-commit install
 
-# 2) Create database
-createdb fastapi_starter  # or: psql -c 'CREATE DATABASE fastapi_starter;'
+# 3) Create local env file
+cp .env.example .env
 
-# 3) Run migrations
+# 4) Create the database
+createdb fastapi_starter
+# or: psql -c 'CREATE DATABASE fastapi_starter;'
+
+# 5) Run migrations
 alembic upgrade head
 
-# 4) Start the API
-uvicorn app.main:app --reload
+# 6) Start the API
+uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
 ```
 
-### Notes
+### Option B: Docker Compose
 
-- App uses **async engine** via `postgresql+asyncpg`
-- Alembic uses **sync driver** (`psycopg`) for migrations
-- Default entity: `User` with endpoints:
-  - `POST /auth/register` - Register new user
-  - `POST /auth/login` - Login and get JWT token
-  - `POST /users` - Create user (admin)
-  - `GET /users` - List all users
-  - `GET /users/{id}` - Get user by ID
+```bash
+docker compose up -d --build
+```
 
-## Environment Setup
+Services exposed by the default compose stack:
 
-Create a `.env` file:
+- API: <http://localhost:8000>
+- Swagger UI: <http://localhost:8000/docs>
+- PostgreSQL: `localhost:5434` (`postgres` / `postgres`, database `mydb`)
+- Adminer: <http://localhost:8080>
+- Redis: `localhost:6379`
+
+Stop and remove volumes:
+
+```bash
+docker compose down -v
+```
+
+## Environment configuration
+
+Copy `.env.example` to `.env` for local development.
+
+Important settings:
 
 ```dotenv
 DATABASE_URL=postgresql+asyncpg://postgres:postgres@localhost:5432/fastapi_starter
+# Optional: explicit sync URL for Alembic
+# DATABASE_URL_SYNC=postgresql+psycopg://postgres:postgres@localhost:5432/fastapi_starter
 APP_HOST=127.0.0.1
 APP_PORT=8000
+# Optional JWT settings
+# SECRET_KEY=your-secret-key-here
+# ACCESS_TOKEN_EXPIRE_MINUTES=1440
 ```
 
-## Migration commands
+Notes:
+
+- The application uses the async PostgreSQL driver (`asyncpg`) at runtime.
+- Alembic uses `psycopg` for migrations.
+- In Docker Compose, `.env.docker` points the app at the `db` service and uses database `mydb`.
+
+## Available routes
+
+### Utility
+
+- `GET /health`
+- `GET /docs`
+- `GET /openapi.json`
+
+### Auth
+
+- `POST /auth/register`
+- `POST /auth/login`
+
+### Users
+
+- `POST /users`
+- `GET /users`
+- `GET /users/{user_id}`
+- `GET /users/{user_id}/details`
+- `GET /users/email/{email}`
+- `GET /users/search?q=...&limit=...`
+- `PUT /users/{user_id}`
+- `DELETE /users/{user_id}`
+
+## Common development commands
+
+You can use either `make` or `just`.
 
 ```bash
-# Generate a new migration (after editing models)
-alembic revision --autogenerate -m "describe changes"
+# install deps and hooks
+make setup
+# or
+just setup
 
-# Apply migrations
-alembic upgrade head
+# run dev server
+make run
+# or
+just run
 
-# Downgrade one
-alembic downgrade -1
+# format
+make fmt
+# or
+just fmt
+
+# lint
+make lint
+# or
+just lint
+
+# type check
+make type
+# or
+just type
+
+# run tests
+make test
+# or
+just test
+
+# create migration
+make revision m="describe changes"
+# or
+just revision "describe changes"
+
+# apply migrations
+make migrate
+# or
+just migrate
+
+# export OpenAPI spec to docs/openapi.json
+make openapi
+# or
+just openapi
 ```
+
+## CI
+
+GitHub Actions runs the following on pushes to `main` and on pull requests:
+
+- PostgreSQL service container
+- dependency install
+- Alembic migrations
+- Ruff lint
+- mypy type check
+- pytest
+- OpenAPI export artifact upload
+
+Workflow file: `.github/workflows/ci.yml`
+
+## API docs
+
+Interactive Swagger UI is available at `/docs` when the app is running.
+
+The repo also includes:
+
+- `docs/openapi.json` — exported OpenAPI artifact
+- `docs/swagger-screenshot.png` — README asset
 
 ## Testing the API
 
 ```bash
-# Register a new user
+# Register a user
 curl -X POST http://127.0.0.1:8000/auth/register \
   -H "Content-Type: application/json" \
   -d '{"email":"test@example.com","full_name":"Test User","password":"password123"}'
 
-# Login to get JWT token
+# Login
 curl -X POST http://127.0.0.1:8000/auth/login \
   -H "Content-Type: application/json" \
   -d '{"email":"test@example.com","password":"password123"}'
 
-# List users (requires authentication)
-curl -X GET http://127.0.0.1:8000/users \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+# List users
+curl -X GET http://127.0.0.1:8000/users
 ```
 
-## Docker Development
+## Screenshot
 
-```bash
-# Start database and API
-docker compose up -d --build
-
-# View logs
-docker compose logs -f api
-
-# Stop everything
-docker compose down -v
-```
-
-- API: <http://localhost:8000>
-- Database: localhost:5434 (postgres/postgres)
-
-## Development Commands
-
-```bash
-# Format code
-make fmt
-
-# Lint code
-make lint
-
-# Type checking
-make type
-
-# Run tests
-make test
-
-# OpenAPI spec
-make openapi
-```
-
-## Authentication
-
-The API includes JWT-based authentication:
-
-1. **Register**: `POST /auth/register` with email, password, and optional full_name
-2. **Login**: `POST /auth/login` with email and password to get JWT token
-3. **Protected routes**: Include `Authorization: Bearer <token>` header
-
-All user management endpoints require authentication.
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
+<img src="docs/swagger-screenshot.png" alt="Swagger UI screenshot" width="600">
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Support
-
-If you found this starter template helpful, please give it a ⭐ star!
-
----
-
-<div align="center">
-
-**Made with ❤️ for the FastAPI community**
-
-[![GitHub stars](https://img.shields.io/github/stars/justyn-clark/fastapi-sqlalchemy-starter?style=social)](https://github.com/justyn-clark/fastapi-sqlalchemy-starter)
-[![GitHub forks](https://img.shields.io/github/forks/justyn-clark/fastapi-sqlalchemy-starter?style=social)](https://github.com/justyn-clark/fastapi-sqlalchemy-starter)
-
-</div>
+MIT. See [LICENSE](LICENSE).
