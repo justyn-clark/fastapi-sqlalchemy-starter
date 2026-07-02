@@ -3,7 +3,9 @@ from datetime import UTC, datetime, timedelta
 
 from jose import jwt
 
-SECRET_KEY = "CHANGE_ME_SUPER_SECRET"  # replace via env/secret manager
+from .config import settings
+
+SECRET_KEY = settings.secret_key
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24
 
