@@ -12,6 +12,7 @@ class Settings(BaseSettings):
     database_url_sync: str | None = Field(default=None, alias="DATABASE_URL_SYNC")
     app_host: str = Field(default="127.0.0.1", alias="APP_HOST")
     app_port: int = Field(default=8000, alias="APP_PORT")
+    secret_key: str = Field(default="CHANGE_ME_SUPER_SECRET", alias="SECRET_KEY")
 
 
 settings = Settings()
